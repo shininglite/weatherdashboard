@@ -78,7 +78,7 @@ $(document).ready(function () {
       // Specifies the URL to send the request to
       // sending request to api.openweathermap.org
       // with the text value of searchValue (name of the city) variable
-      url: "https://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=c8964eed8811dd75cc40e8ea60039298&units=imperial",
+      url: "https://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=600327cb1a9160fea2ab005509d1dc6d&units=imperial",
 
       // The data type expected of the server response.
       dataType: "json",
@@ -148,7 +148,7 @@ $(document).ready(function () {
     // this ajax method retrieves data for the city previously input searchValue
     $.ajax({
       type: "GET",
-      url: "https://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&appid=7ba67ac190f85fdba2e2dc6b9d32e93c&units=imperial",
+      url: "https://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&appid=600327cb1a9160fea2ab005509d1dc6d&units=imperial",
       dataType: "json",
       success: function (data) {
       
@@ -193,7 +193,7 @@ $(document).ready(function () {
       type: "GET",
       // + lat and + lon are specified in the openweathermap api to retrieve 
       // retrieves lat and lon using coordinates based on searchValue variable which is the city name
-      url: "https://api.openweathermap.org/data/2.5/uvi?appid=7ba67ac190f85fdba2e2dc6b9d32e93c&lat=" + lat + "&lon=" + lon,
+      url: "https://api.openweathermap.org/data/2.5/uvi?appid=600327cb1a9160fea2ab005509d1dc6d&lat=" + lat + "&lon=" + lon,
       dataType: "json",
       // if ajax call returns code 200 then it is successful getting the lat lon coordinates
       // so if successful, it runs the function below
