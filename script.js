@@ -78,7 +78,7 @@ $(document).ready(function () {
       // Specifies the URL to send the request to
       // sending request to api.openweathermap.org
       // with the text value of searchValue (name of the city) variable
-      url: "https://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=cb4fedce63626976d0e5332283d236b2&units=imperial",
+      url: "https://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=c8964eed8811dd75cc40e8ea60039298&units=imperial",
 
       // The data type expected of the server response.
       dataType: "json",
