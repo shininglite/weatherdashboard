@@ -4,18 +4,18 @@
 // (document) specifies the document object
 // .ready specifies a function to run 
 // when the document is fully loaded
-$(document).ready(function() {
-// jquery method ".on" attaches an event handler function for 
-// one or more events, to the selected element(s).
-// the selected element in this case is the unique #id of #search-button
-// which is the search button in the index.html
-// one of the arguments of the .on method, is "click"
-// the other argument is an anonymous "callback" function
-// the on() method replaces bind(), live() and delegate() methods
-// in versions of jQuery before 1.7
-// TODO: explain callback functions here
-  $("#search-button").on("click", function()
-   {
+$(document).ready(function () {
+  // jquery method ".on" attaches an event handler function for 
+  // one or more events, to the selected element(s).
+  // the selected element in this case is the unique #id of #search-button
+  // which is the search button in the index.html
+  // one of the arguments of the .on method, is "click"
+  // the other argument is an anonymous "callback" function
+  // the on() method replaces bind(), live() and delegate() methods
+  // in versions of jQuery before 1.7
+  // TODO: explain callback functions here
+  $("#search-button").on("click", function () {
+
     // set value of searchValue 
     // refers to index.html id="search-value"
     // .val() jQuery method is primarily used to get the values of form
@@ -39,21 +39,21 @@ $(document).ready(function() {
   // jQuery selects class history
   // listening for click on 
   // a previously entered city in an existing list
-  $(".history").on("click", "li", function() {
+  $(".history").on("click", "li", function () {
     searchWeather($(this).text());
     //console.log($(this).text()); // displays the city clicked in console
   });
 
   // function makeRow receives the name of the city as an argument
   function makeRow(text) {
-    
+
     // create li as list item variable
     // jQuery method to create in memory the open and close li HTML tags
     // for the current city (text argument) for any element that is of 
     // class .addClass
     // .text(text) inserts the city name between li tags <li>"City"</li>
     var li = $("<li>").addClass("list-group-item list-group-item-action").text(text);
-    
+
     // $(".history") jQuery method to target .history class items in index.html
     // .append(li) adds the assembled html element to for class .history tags before
     // the closing </ul> tag
@@ -71,22 +71,22 @@ $(document).ready(function() {
     // jQuery method ajax specifies name value pairs (e.g. type: "GET")
     // necessary to query the API for information desired
     $.ajax({
-    // The type of request to make, which can be either “POST” or “GET” url
+
+      // The type of request to make, which can be either “POST” or “GET” url
       type: "GET",
 
       // Specifies the URL to send the request to
       // sending request to api.openweathermap.org
-      // with the text value of searchValue variable inserted into the string
-      //  TODO: analyze api to decipher appid parameter and units parameter
+      // with the text value of searchValue (name of the city) variable
       url: "https://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=cb4fedce63626976d0e5332283d236b2&units=imperial",
-      
+
       // The data type expected of the server response.
       dataType: "json",
 
       // success function takes three arguments (result, status, xhr)
       // A function to be run when the request *succeeds*
       // in this case we're only using a single argument, result
-      success: function(data) {
+      success: function (data) {
 
         // create history link for this search
         // if there is no previous city in the history array
@@ -100,11 +100,11 @@ $(document).ready(function() {
           // store history array locally 
           // TODO: be more explicit
           window.localStorage.setItem("history", JSON.stringify(history));
-          
+
           //function call to makeRow passing current city name
           makeRow(searchValue);
         }
-        
+
         // clear any old content
         //jQuery method to void today id div in index.html
         $("#today").empty();
@@ -112,7 +112,7 @@ $(document).ready(function() {
         // create html content for current weather
         // jQuery dynamically creating the card and placeholder variables
         // for text and image to appear inside the card
-        
+
         // TODO: come back to this later
         // dynamically create tags, classes, text, image at #today id
         var title = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
@@ -142,20 +142,26 @@ $(document).ready(function() {
     });
   }
   // getForecast function takes in searchValue, the name of the current city
-    function getForecast(searchValue) {
-      console.log("Now inside the get Forecast Function!") // this displays in console!
-      // this ajax method retrieves data for the city previously input
-      $.ajax({
+  function getForecast(searchValue) {
+    console.log("Now inside the get Forecast Function!") // this displays in console!
+    
+    // this ajax method retrieves data for the city previously input searchValue
+    $.ajax({
       type: "GET",
       url: "https://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&appid=7ba67ac190f85fdba2e2dc6b9d32e93c&units=imperial",
       dataType: "json",
-      success: function(data) {
+      success: function (data) {
+      
         // overwrite any existing content with title and empty row
         // create h4 element using jQuery
-        // append assembled element at Forecast id        
+        // append assembled element at Forecast id 
+        // backslashes are called escape characters, which cause the syntax to work as intended
+        // assembles an html element, an h4 tag, inserts Bootstrap class mt-3 (margin top 3px) 
+        // inserts all that at div class row in container-fluid in index.html   
         $("#forecast").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
 
         // loop over all forecasts (by 3-hour increments)
+        // create a for loop, start at zero, while counter is less than 
         for (var i = 0; i < data.list.length; i++) {
           // only look at forecasts around 3:00pm
           if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
@@ -179,27 +185,51 @@ $(document).ready(function() {
       }
     });
   }
-
+  // function called getUVIndex is expecting two variables returned to it
+  // latitude and longitude
   function getUVIndex(lat, lon) {
+    // jQuery method 
     $.ajax({
       type: "GET",
+      // + lat and + lon are specified in the openweathermap api to retrieve 
+      // retrieves lat and lon using coordinates based on searchValue variable which is the city name
       url: "https://api.openweathermap.org/data/2.5/uvi?appid=7ba67ac190f85fdba2e2dc6b9d32e93c&lat=" + lat + "&lon=" + lon,
       dataType: "json",
-      success: function(data) {
+      // if ajax call returns code 200 then it is successful getting the lat lon coordinates
+      // so if successful, it runs the function below
+      // success is a property of the ajax method
+      success: function (data) {
+        // creating uv variable assigns paragraph element and inserts "UV Index: "
         var uv = $("<p>").text("UV Index: ");
+        // creating btn variable and creates span tags and inserting bootstrap type of class and type of button
+        // appending value of the uv index 
+        // data.value is a range of numbers of the UV Index from 0 - 11
+        // creates the button, adds the class and inserts text inside the button
         var btn = $("<span>").addClass("btn btn-sm").text(data.value);
-        
+
         // change color depending on uv value
+        // references css to change btn color
+        // if low UV index
         if (data.value < 3) {
+        // adds a class called btn-success, these are bootstrap classes
           btn.addClass("btn-success");
         }
+        // adds a class called btn-warning, these are bootstrap classes
         else if (data.value < 7) {
           btn.addClass("btn-warning");
         }
         else {
+          // adds a class called btn-danger these are bootstrap classes
+          // color changes are in CSS 
           btn.addClass("btn-danger");
         }
-        
+        // appends btn to html and appends the uv value to the btn
+        // #today is id in the html
+        // .card-body is a bootstrap class
+        // .append will appends 
+        // uv variable is "UV Index: " text
+        // btn goes into the uv, uv goes into the card body 
+        // card body goes into today id div
         $("#today .card-body").append(uv.append(btn));
       }
     });
@@ -232,7 +262,7 @@ $(document).ready(function() {
     // the index of the length of the array -1
     // for example if the length of the array is 1
     // then searchWeather(history[0]);
-    searchWeather(history[history.length-1]);
+    searchWeather(history[history.length - 1]);
   }
 
   // for loop starting at 0
@@ -242,8 +272,8 @@ $(document).ready(function() {
   for (var i = 0; i < history.length; i++) {
     // call makeRow function with argument of current value
     // of history variable
-    // so make a row each item in the history array
-    // so make a row for each city name
+    // so make a row for the current item in the history array
+    // so each time through the loop, make new row for another city name
     makeRow(history[i]);
   }
 });
